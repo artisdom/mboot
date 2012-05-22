@@ -1,0 +1,10 @@
+.\output\dma.o: atmel\dma.c
+.\output\dma.o: atmel\board.h
+.\output\dma.o: atmel\chip.h
+.\output\dma.o: atmel\AT91SAM9M10.h
+.\output\dma.o: .\def.h
+.\output\dma.o: .\soc.h
+.\output\dma.o: .\init_hw.h
+.\output\dma.o: .\trace.h
+.\output\dma.o: .\shell.h
+.\output\dma.o: atmel\dma.h

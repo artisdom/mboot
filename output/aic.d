@@ -1,0 +1,10 @@
+.\output\aic.o: atmel\aic.c
+.\output\aic.o: .\def.h
+.\output\aic.o: .\soc.h
+.\output\aic.o: .\init_hw.h
+.\output\aic.o: .\trace.h
+.\output\aic.o: .\shell.h
+.\output\aic.o: atmel\board.h
+.\output\aic.o: atmel\chip.h
+.\output\aic.o: atmel\AT91SAM9M10.h
+.\output\aic.o: atmel\irq.h

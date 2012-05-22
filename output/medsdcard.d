@@ -1,0 +1,17 @@
+.\output\medsdcard.o: atmel\MEDSdcard.c
+.\output\medsdcard.o: atmel\board.h
+.\output\medsdcard.o: atmel\chip.h
+.\output\medsdcard.o: atmel\AT91SAM9M10.h
+.\output\medsdcard.o: .\def.h
+.\output\medsdcard.o: .\soc.h
+.\output\medsdcard.o: .\init_hw.h
+.\output\medsdcard.o: .\trace.h
+.\output\medsdcard.o: .\shell.h
+.\output\medsdcard.o: atmel\MEDSdcard.h
+.\output\medsdcard.o: .\atmel\Media.h
+.\output\medsdcard.o: .\atmel\sdmmc_mci.h
+.\output\medsdcard.o: .\atmel\mci_hs.h
+.\output\medsdcard.o: atmel\irq.h
+.\output\medsdcard.o: atmel\math.h
+.\output\medsdcard.o: atmel\dmad.h
+.\output\medsdcard.o: C:\Keil\ARM\RV31\INC\string.h

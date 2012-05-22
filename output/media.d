@@ -1,0 +1,10 @@
+.\output\media.o: atmel\Media.c
+.\output\media.o: atmel\board.h
+.\output\media.o: atmel\chip.h
+.\output\media.o: atmel\AT91SAM9M10.h
+.\output\media.o: .\def.h
+.\output\media.o: .\soc.h
+.\output\media.o: .\init_hw.h
+.\output\media.o: .\trace.h
+.\output\media.o: .\shell.h
+.\output\media.o: atmel\Media.h

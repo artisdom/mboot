@@ -1,0 +1,1 @@
+ --thumb -c --cpu ARM926EJ-S -g -O0 --apcs=interwork --asm --interleave --asm_dir ".\\output\\" --gnu -I "C:\Keil\ARM\CMSIS\Include" -I "C:\Keil\ARM\INC\Atmel\SAM9M10" -Dat91sam9m10 -Dddram -DNOFPUT -DTRACE_LEVEL="4" -o ".\output\mci.o" --list_dir ".\\output\\" --list --omf_browse ".\output\mci.crf" --depend ".\output\mci.d" "mci.c"

@@ -1,0 +1,4 @@
+--cpu ARM926EJ-S ".\output\main.o" ".\output\init_hw.o" ".\output\init_boot.o" ".\output\dbgu.o" ".\output\cp15.o" ".\output\cp15_init.o" ".\output\trace.o" ".\output\system.o" ".\output\shell.o" ".\output\bootx.o" ".\output\aic.o" ".\output\diskio.o" ".\output\dma.o" ".\output\dmad.o" ".\output\ff.o" ".\output\math.o" ".\output\mci_hs.o" ".\output\media.o" ".\output\medsdcard.o" ".\output\pmc.o" ".\output\sdmmc_mci.o" --strict --scatter ".\mboot.sct" 
+--entry HandlerReset --summary_stderr --info summarysizes --map --xref --callgraph --symbols 
+--info sizes --info totals --info unused --info veneers 
+ --list ".\output\mboot.map" -o ".\output\mboot.axf"

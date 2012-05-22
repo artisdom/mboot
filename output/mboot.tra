@@ -1,0 +1,39 @@
+*** Creating Trace Output File '.\output\mboot.tra' Ok.
+### Preparing for ADS-LD.
+### Creating ADS-LD Command Line
+### List of Objects: adding '".\output\main.o"'
+### List of Objects: adding '".\output\init_hw.o"'
+### List of Objects: adding '".\output\init_boot.o"'
+### List of Objects: adding '".\output\dbgu.o"'
+### List of Objects: adding '".\output\cp15.o"'
+### List of Objects: adding '".\output\cp15_init.o"'
+### List of Objects: adding '".\output\trace.o"'
+### List of Objects: adding '".\output\system.o"'
+### List of Objects: adding '".\output\shell.o"'
+### List of Objects: adding '".\output\bootx.o"'
+### List of Objects: adding '".\output\aic.o"'
+### List of Objects: adding '".\output\diskio.o"'
+### List of Objects: adding '".\output\dma.o"'
+### List of Objects: adding '".\output\dmad.o"'
+### List of Objects: adding '".\output\ff.o"'
+### List of Objects: adding '".\output\math.o"'
+### List of Objects: adding '".\output\mci_hs.o"'
+### List of Objects: adding '".\output\media.o"'
+### List of Objects: adding '".\output\medsdcard.o"'
+### List of Objects: adding '".\output\pmc.o"'
+### List of Objects: adding '".\output\sdmmc_mci.o"'
+### ADS-LD Command completed:
+--cpu ARM926EJ-S ".\output\main.o" ".\output\init_hw.o" ".\output\init_boot.o" ".\output\dbgu.o" ".\output\cp15.o" ".\output\cp15_init.o" ".\output\trace.o" ".\output\system.o" ".\output\shell.o" ".\output\bootx.o" ".\output\aic.o" ".\output\diskio.o" ".\output\dma.o" ".\output\dmad.o" ".\output\ff.o" ".\output\math.o" ".\output\mci_hs.o" ".\output\media.o" ".\output\medsdcard.o" ".\output\pmc.o" ".\output\sdmmc_mci.o" --strict --scatter ".\mboot.sct" 
+--entry HandlerReset --summary_stderr --info summarysizes --map --xref --callgraph --symbols 
+--info sizes --info totals --info unused --info veneers 
+ --list ".\output\mboot.map" -o ".\output\mboot.axf"### Preparing Environment (PrepEnvAds)
+### ADS-LD Output File: '.\output\mboot.axf'
+### ADS-LD Command File: '.\output\mboot.lnp'
+### Checking for dirty Components...
+### Creating CmdFile '.\output\mboot.lnp', Handle=0x00000198
+### Writing '.lnp' file
+### ADS-LD Command file '.\output\mboot.lnp' is ready.
+### ADS-LD: About to start ADS-LD Thread.
+### ADS-LD: executed with 0 errors
+### Updating obj list
+### LDADS_file() completed.

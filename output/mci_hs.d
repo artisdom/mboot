@@ -1,0 +1,12 @@
+.\output\mci_hs.o: atmel\mci_hs.c
+.\output\mci_hs.o: atmel\board.h
+.\output\mci_hs.o: atmel\chip.h
+.\output\mci_hs.o: atmel\AT91SAM9M10.h
+.\output\mci_hs.o: .\def.h
+.\output\mci_hs.o: .\soc.h
+.\output\mci_hs.o: .\init_hw.h
+.\output\mci_hs.o: .\trace.h
+.\output\mci_hs.o: .\shell.h
+.\output\mci_hs.o: atmel\mci_hs.h
+.\output\mci_hs.o: atmel\dmad.h
+.\output\mci_hs.o: atmel\dma.h

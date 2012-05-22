@@ -1,0 +1,1043 @@
+L 1 "init_hw.c"
+N/*
+N * ------------------------------------------------------------------------------
+N *
+N * ------------------------------------------------------------------------------
+N */
+N 
+N#include "def.h"
+L 1 "def.h" 1
+N/*
+N *------------------------------------------------------------------------------
+N *
+N *------------------------------------------------------------------------------
+N */
+N
+N#ifndef __DEF_H__
+N#define __DEF_H__
+N
+Ntypedef float F32;
+Ntypedef unsigned int U32;
+Ntypedef int S32;
+Ntypedef unsigned short U16;
+Ntypedef short int S16;
+Ntypedef unsigned char U8;
+Ntypedef char S8;
+N
+Ntypedef enum { FALSE = 0, TRUE } BOOL;
+N
+N#endif /* __DEF_H__ */
+L 8 "init_hw.c" 2
+N
+N#include "soc.h"
+L 1 "soc.h" 1
+N/*
+N *------------------------------------------------------------------------------
+N *
+N *------------------------------------------------------------------------------
+N */
+N
+N#ifndef __SOC_H__
+N#define __SOC_H__
+N
+N#define BOARD_MAINOSC	12000000
+N#define BOARD_MCK		((unsigned long)((BOARD_MAINOSC / 3 / 2 / 3) * 200 )) // 133MHz
+N
+N#define rWDT_SR			(*(volatile U32 *)(0xFFFFFD44))
+N#define rSHDW_MR		(*(volatile U32 *)(0xFFFFFD14))
+N#define rSYS_RSTC		(*(volatile U32 *)(0xFFFFFD08))
+N#define rSCKCR			(*(volatile U32 *)(0xFFFFFD50))
+N
+N#define rCKGR_MOR		(*(volatile U32 *)(0xFFFFFC20))
+N#define rCKGR_PLLAR		(*(volatile U32 *)(0xFFFFFC28))
+N#define rCKGR_UCKR		(*(volatile U32 *)(0xFFFFFC1C))
+N
+N#define rPMC_MCKR		(*(volatile U32 *)(0xFFFFFC30))
+N#define rPMC_PLLICPR	(*(volatile U32 *)(0xFFFFFC80))
+N#define rPMC_SR			(*(volatile U32 *)(0xFFFFFC68))
+N#define rPMC_SCER		(*(volatile U32 *)(0xFFFFFC00))
+N#define rPMC_SCDR		(*(volatile U32 *)(0xFFFFFC04))
+N#define rPMC_SCSR		(*(volatile U32 *)(0xFFFFFC08))
+N#define rPMC_USB		(*(volatile U32 *)(0xFFFFFC38))
+N#define rPMC_PCER		(*(volatile U32 *)(0xFFFFFC10))
+N#define rPMC_PCDR		(*(volatile U32 *)(0xFFFFFC14))
+N#define rPMC_PCSR		(*(volatile U32 *)(0xFFFFFC18))
+N#define rPMC_PCK0		(*(volatile U32 *)(0xFFFFFC40))
+N#define rPMC_PCK1		(*(volatile U32 *)(0xFFFFFC44))
+N
+N#define rAIC_SMR(id)	(*(volatile U32 *)(0xFFFFF000+id*0x4))
+N#define rAIC_SVR(id)	(*(volatile U32 *)(0xFFFFF000+id*0x4+0x80))
+N#define rAIC_IECR		(*(volatile U32 *)(0xFFFFF120))
+N#define rAIC_IDCR		(*(volatile U32 *)(0xFFFFF124))
+N#define rAIC_ICCR		(*(volatile U32 *)(0xFFFFF128))
+N#define rAIC_EOICR		(*(volatile U32 *)(0xFFFFF130))
+N#define rAIC_SPU		(*(volatile U32 *)(0xFFFFF134))
+N
+N#define rRTT_MR			(*(volatile U32 *)(0xFFFFFD20)) // Mode Register Read-write 0x0000_8000
+N#define rRTT_AR			(*(volatile U32 *)(0xFFFFFD24)) // Alarm Register Read-write 0xFFFF_FFFF
+N#define rRTT_VR			(*(volatile U32 *)(0xFFFFFD28)) // Value Register Read-only 0x0000_0000
+N#define rRTT_SR			(*(volatile U32 *)(0xFFFFFD2C)) // Status Register Read-only 0x0000_0000
+N
+N#define rPIT_MR			(*(volatile U32 *)(0xFFFFFD30)) // Mode Register Read-write 0x000F_FFFF
+N#define rPIT_SR			(*(volatile U32 *)(0xFFFFFD34)) // Status Register Read-only 0x0000_0000
+N#define rPIT_PIVR		(*(volatile U32 *)(0xFFFFFD38)) // Periodic Interval Value Register Read-only 0x0000_0000
+N#define rPIT_PIIR		(*(volatile U32 *)(0xFFFFFD3C)) // Periodic Interval Image Register Read-only 0x0000_0000
+N
+N#define rMATRIX_MCFG0	(*(volatile U32 *)(0xFFFFEA00)) // Master Configuration Register 0  Read-write 0x00000001
+N#define rMATRIX_MCFG1	(*(volatile U32 *)(0xFFFFEA04)) // Master Configuration Register 1 Read-write 0x00000000
+N#define rMATRIX_MCFG2	(*(volatile U32 *)(0xFFFFEA08)) // Master Configuration Register 2 Read-write 0x00000000
+N#define rMATRIX_MCFG3	(*(volatile U32 *)(0xFFFFEA0C)) // Master Configuration Register 3 Read-write 0x00000000
+N#define rMATRIX_MCFG4	(*(volatile U32 *)(0xFFFFEA10)) // Master Configuration Register 4 Read-write 0x00000000
+N#define rMATRIX_MCFG5	(*(volatile U32 *)(0xFFFFEA14)) // Master Configuration Register 5 Read-write 0x00000000
+N#define rMATRIX_MCFG6	(*(volatile U32 *)(0xFFFFEA18)) // Master Configuration Register 6 Read-write 0x00000000
+N#define rMATRIX_MCFG7	(*(volatile U32 *)(0xFFFFEA1C)) // Master Configuration Register 7 Read-write 0x00000000
+N#define rMATRIX_MCFG8	(*(volatile U32 *)(0xFFFFEA20)) // Master Configuration Register 8 Read-write 0x00000000
+N#define rMATRIX_MCFG9	(*(volatile U32 *)(0xFFFFEA24)) // Master Configuration Register 9 Read-write 0x00000000
+N#define rMATRIX_MCFG10	(*(volatile U32 *)(0xFFFFEA28)) // Master Configuration Register 10 Read-write 0x00000000
+N#define rMATRIX_MCFG11	(*(volatile U32 *)(0xFFFFEA2C)) // Master Configuration Register 11 Read-write 0x00000000
+N#define rMATRIX_SCFG0	(*(volatile U32 *)(0xFFFFEA40)) // Slave Configuration Register 0 Read-write 0x000001FF
+N#define rMATRIX_SCFG1	(*(volatile U32 *)(0xFFFFEA44)) // Slave Configuration Register 1 Read-write 0x000001FF
+N#define rMATRIX_SCFG2	(*(volatile U32 *)(0xFFFFEA48)) // Slave Configuration Register 2 Read-write 0x000001FF
+N#define rMATRIX_SCFG3	(*(volatile U32 *)(0xFFFFEA4C)) // Slave Configuration Register 3 Read-write 0x000001FF
+N#define rMATRIX_SCFG4	(*(volatile U32 *)(0xFFFFEA50)) // Slave Configuration Register 4 Read-write 0x000001FF
+N#define rMATRIX_SCFG5	(*(volatile U32 *)(0xFFFFEA54)) // Slave Configuration Register 5 Read-write 0x000001FF
+N#define rMATRIX_SCFG6	(*(volatile U32 *)(0xFFFFEA58)) // Slave Configuration Register 6 Read-write 0x000001FF
+N#define rMATRIX_SCFG7	(*(volatile U32 *)(0xFFFFEA5C)) // Slave Configuration Register 7 Read-write 0x000001FF
+N#define rMATRIX_PRAS0	(*(volatile U32 *)(0xFFFFEA80)) // Priority Register A for Slave 0 Read-write 0x00000000
+N#define rMATRIX_PRBS0	(*(volatile U32 *)(0xFFFFEA84)) // Priority Register B for Slave 0 Read-write 0x00000000
+N#define rMATRIX_PRAS1	(*(volatile U32 *)(0xFFFFEA88)) // Priority Register A for Slave 1 Read-write 0x00000000
+N#define rMATRIX_PRBS1	(*(volatile U32 *)(0xFFFFEA8C)) // Priority Register B for Slave 1 Read-write 0x00000000
+N#define rMATRIX_PRAS2	(*(volatile U32 *)(0xFFFFEA90)) // Priority Register A for Slave 2 Read-write 0x00000000
+N#define rMATRIX_PRBS2	(*(volatile U32 *)(0xFFFFEA94)) // Priority Register B for Slave 2 Read-write 0x00000000
+N#define rMATRIX_PRAS3	(*(volatile U32 *)(0xFFFFEA98)) // Priority Register A for Slave 3 Read-write 0x00000000
+N#define rMATRIX_PRBS3	(*(volatile U32 *)(0xFFFFEA9C)) // Priority Register B for Slave 3 Read-write 0x00000000
+N#define rMATRIX_PRAS4	(*(volatile U32 *)(0xFFFFEAA0)) // Priority Register A for Slave 4 Read-write 0x00000000
+N#define rMATRIX_PRBS4	(*(volatile U32 *)(0xFFFFEAA4)) // Priority Register B for Slave 4 Read-write 0x00000000
+N#define rMATRIX_PRAS5	(*(volatile U32 *)(0xFFFFEAA8)) // Priority Register A for Slave 5 Read-write 0x00000000
+N#define rMATRIX_PRBS5	(*(volatile U32 *)(0xFFFFEAAC)) // Priority Register B for Slave 5 Read-write 0x00000000
+N#define rMATRIX_PRAS6	(*(volatile U32 *)(0xFFFFEAB0)) // Priority Register A for Slave 6 Read-write 0x00000000
+N#define rMATRIX_PRBS6	(*(volatile U32 *)(0xFFFFEAB4)) // Priority Register B for Slave 6 Read-write 0x00000000
+N#define rMATRIX_PRAS7	(*(volatile U32 *)(0xFFFFEAB8)) // Priority Register A for Slave 7 Read-write 0x00000000
+N#define rMATRIX_PRBS7	(*(volatile U32 *)(0xFFFFEABC)) // Priority Register B for Slave 7 Read-write 0x00000000
+N#define rMATRIX_MRCR	(*(volatile U32 *)(0xFFFFEB00)) // Master Remap Control Register Read-write 0x00000000
+N#define rMATRIX_WPMR	(*(volatile U32 *)(0xFFFFEBE4)) // Write Protect Mode Register Read-write 0x00000000
+N#define rMATRIX_WPSR	(*(volatile U32 *)(0xFFFFEBE8)) // Write Protect Status Register Read-only 0x00000000
+N
+N#define rDMAC_GCFG		(*(volatile U32 *)(0xFFFFEC00))
+N#define rDMAC_EN		(*(volatile U32 *)(0xFFFFEC04))
+N#define rDMAC_SREQ		(*(volatile U32 *)(0xFFFFEC08))
+N#define rDMAC_CREQ		(*(volatile U32 *)(0xFFFFEC0C))
+N#define rDMAC_LAST		(*(volatile U32 *)(0xFFFFEC10))
+N#define rDMAC_EBCIER	(*(volatile U32 *)(0xFFFFEC18))
+N#define rDMAC_EBCIDR	(*(volatile U32 *)(0xFFFFEC1C))
+N#define rDMAC_EBCIMR	(*(volatile U32 *)(0xFFFFEC20))
+N#define rDMAC_EBCISR	(*(volatile U32 *)(0xFFFFEC24))
+N#define rDMAC_CHER		(*(volatile U32 *)(0xFFFFEC28))
+N#define rDMAC_CHDR		(*(volatile U32 *)(0xFFFFEC2C))
+N#define rDMAC_CHSR		(*(volatile U32 *)(0xFFFFEC30))
+N#define rDMAC_SADDR(ch)	(*(volatile U32 *)(0xFFFFEC3C+ch*(0x28)+(0x0)))
+N#define rDMAC_DADDR(ch)	(*(volatile U32 *)(0xFFFFEC3C+ch*(0x28)+(0x4)))
+N#define rDMAC_DSCR(ch)	(*(volatile U32 *)(0xFFFFEC3C+ch*(0x28)+(0x8)))
+N#define rDMAC_CTRLA(ch)	(*(volatile U32 *)(0xFFFFEC3C+ch*(0x28)+(0xC)))
+N#define rDMAC_CTRLB(ch)	(*(volatile U32 *)(0xFFFFEC3C+ch*(0x28)+(0x10)))
+N#define rDMAC_CFG(ch)	(*(volatile U32 *)(0xFFFFEC3C+ch*(0x28)+(0x14)))
+N#define rDMAC_SPIP(ch)	(*(volatile U32 *)(0xFFFFEC3C+ch*(0x28)+(0x18)))
+N#define rDMAC_DPIP(ch)	(*(volatile U32 *)(0xFFFFEC3C+ch*(0x28)+(0x1C)))
+N
+N#define rPIOA_PER		(*(volatile U32 *)(0xFFFFF200)) // PIO Enable Register Write-only
+N#define rPIOA_PDR		(*(volatile U32 *)(0xFFFFF204)) // PIO Disable Register Write-only
+N#define rPIOA_PSR		(*(volatile U32 *)(0xFFFFF208)) // PIO Status Register Read-only
+N#define rPIOA_OER		(*(volatile U32 *)(0xFFFFF210)) // Output Enable Register Write-only
+N#define rPIOA_ODR		(*(volatile U32 *)(0xFFFFF214)) // Output Disable Register Write-only
+N#define rPIOA_OSR		(*(volatile U32 *)(0xFFFFF218)) // Output Status Register Read-only 0x00000000
+N#define rPIOA_IFER		(*(volatile U32 *)(0xFFFFF220)) // Glitch Input Filter Enable Register Write-only
+N#define rPIOA_IFDR		(*(volatile U32 *)(0xFFFFF224)) // Glitch Input Filter Disable Register Write-only
+N#define rPIOA_IFSR		(*(volatile U32 *)(0xFFFFF228)) // Glitch Input Filter Status Register Read-only 0x00000000
+N#define rPIOA_SODR		(*(volatile U32 *)(0xFFFFF230)) // Set Output Data Register Write-only
+N#define rPIOA_CODR		(*(volatile U32 *)(0xFFFFF234)) // Clear Output Data Register Write-only
+N#define rPIOA_ODSR		(*(volatile U32 *)(0xFFFFF238)) // Output Data Status Register 
+N#define rPIOA_PDSR		(*(volatile U32 *)(0xFFFFF23C)) // Pin Data Status Register Read-only
+N#define rPIOA_IER		(*(volatile U32 *)(0xFFFFF240)) // Interrupt Enable Register Write-only
+N#define rPIOA_IDR		(*(volatile U32 *)(0xFFFFF244)) // Interrupt Disable Register Write-only
+N#define rPIOA_IMR		(*(volatile U32 *)(0xFFFFF248)) // Interrupt Mask Register  Read-only 0x00000000
+N#define rPIOA_ISR		(*(volatile U32 *)(0xFFFFF24C)) // Interrupt Status Register Read-only 0x00000000
+N#define rPIOA_MDER		(*(volatile U32 *)(0xFFFFF250)) // Multi-driver Enable Register Write-only
+N#define rPIOA_MDDR		(*(volatile U32 *)(0xFFFFF254)) // Multi-driver Disable Register Write-only
+N#define rPIOA_MDSR		(*(volatile U32 *)(0xFFFFF258)) // Multi-driver Status Register Read-only 0x00000000
+N#define rPIOA_PUDR		(*(volatile U32 *)(0xFFFFF260)) // Pull-up Disable Register Write-only
+N#define rPIOA_PUER		(*(volatile U32 *)(0xFFFFF264)) // Pull-up Enable Register Write-only
+N#define rPIOA_PUSR		(*(volatile U32 *)(0xFFFFF268)) // Pad Pull-up Status Register Read-only 0x00000000
+N#define rPIOA_ASR		(*(volatile U32 *)(0xFFFFF270)) // Peripheral A Select Register Write-only
+N#define rPIOA_BSR		(*(volatile U32 *)(0xFFFFF274)) // Peripheral B Select Register Write-only
+N#define rPIOA_ABSR		(*(volatile U32 *)(0xFFFFF278)) // AB Status Register Read-only 0x00000000
+N#define rPIOA_OWER		(*(volatile U32 *)(0xFFFFF2A0)) // Output Write Enable Write-only
+N#define rPIOA_OWDR		(*(volatile U32 *)(0xFFFFF2A4)) // Output Write Disable Write-only
+N#define rPIOA_OWSR		(*(volatile U32 *)(0xFFFFF2A8)) // Output Write Status Register Read-only 0x00000000
+N#define rPIOA_DELAYR0	(*(volatile U32 *)(0xFFFFF2C0)) // I/O Delay Register 0 Read/Write 0x00000000
+N#define rPIOA_DELAYR1	(*(volatile U32 *)(0xFFFFF2C4)) // I/O Delay Register 1 Read/Write 0x00000000
+N#define rPIOA_DELAYR2	(*(volatile U32 *)(0xFFFFF2C8)) // I/O Delay Register 2 Read/Write 0x00000000
+N#define rPIOA_DELAYR3	(*(volatile U32 *)(0xFFFFF2CC)) // I/O Delay Register 3 Read/Write 0x00000000
+N#define rPIOA_WPMR		(*(volatile U32 *)(0xFFFFF2E4)) // Write Protect Mode Register  Read-write 0x00000000
+N#define rPIOA_WPSR		(*(volatile U32 *)(0xFFFFF2E8)) // Write Protect Status Register 
+N
+N#define rPIOB_PER		(*(volatile U32 *)(0xFFFFF400)) // PIO Enable Register Write-only
+N#define rPIOB_PDR		(*(volatile U32 *)(0xFFFFF404)) // PIO Disable Register Write-only
+N#define rPIOB_PSR		(*(volatile U32 *)(0xFFFFF408)) // PIO Status Register Read-only
+N#define rPIOB_OER		(*(volatile U32 *)(0xFFFFF410)) // Output Enable Register Write-only
+N#define rPIOB_ODR		(*(volatile U32 *)(0xFFFFF414)) // Output Disable Register Write-only
+N#define rPIOB_OSR		(*(volatile U32 *)(0xFFFFF418)) // Output Status Register Read-only 0x00000000
+N#define rPIOB_IFER		(*(volatile U32 *)(0xFFFFF420)) // Glitch Input Filter Enable Register Write-only
+N#define rPIOB_IFDR		(*(volatile U32 *)(0xFFFFF424)) // Glitch Input Filter Disable Register Write-only
+N#define rPIOB_IFSR		(*(volatile U32 *)(0xFFFFF428)) // Glitch Input Filter Status Register Read-only 0x00000000
+N#define rPIOB_SODR		(*(volatile U32 *)(0xFFFFF430)) // Set Output Data Register Write-only
+N#define rPIOB_CODR		(*(volatile U32 *)(0xFFFFF434)) // Clear Output Data Register Write-only
+N#define rPIOB_ODSR		(*(volatile U32 *)(0xFFFFF438)) // Output Data Status Register 
+N#define rPIOB_PDSR		(*(volatile U32 *)(0xFFFFF43C)) // Pin Data Status Register Read-only
+N#define rPIOB_IER		(*(volatile U32 *)(0xFFFFF440)) // Interrupt Enable Register Write-only
+N#define rPIOB_IDR		(*(volatile U32 *)(0xFFFFF444)) // Interrupt Disable Register Write-only
+N#define rPIOB_IMR		(*(volatile U32 *)(0xFFFFF448)) // Interrupt Mask Register  Read-only 0x00000000
+N#define rPIOB_ISR		(*(volatile U32 *)(0xFFFFF44C)) // Interrupt Status Register Read-only 0x00000000
+N#define rPIOB_MDER		(*(volatile U32 *)(0xFFFFF450)) // Multi-driver Enable Register Write-only
+N#define rPIOB_MDDR		(*(volatile U32 *)(0xFFFFF454)) // Multi-driver Disable Register Write-only
+N#define rPIOB_MDSR		(*(volatile U32 *)(0xFFFFF458)) // Multi-driver Status Register Read-only 0x00000000
+N#define rPIOB_PUDR		(*(volatile U32 *)(0xFFFFF460)) // Pull-up Disable Register Write-only
+N#define rPIOB_PUER		(*(volatile U32 *)(0xFFFFF464)) // Pull-up Enable Register Write-only
+N#define rPIOB_PUSR		(*(volatile U32 *)(0xFFFFF468)) // Pad Pull-up Status Register Read-only 0x00000000
+N#define rPIOB_ASR		(*(volatile U32 *)(0xFFFFF470)) // Peripheral A Select Register Write-only
+N#define rPIOB_BSR		(*(volatile U32 *)(0xFFFFF474)) // Peripheral B Select Register Write-only
+N#define rPIOB_ABSR		(*(volatile U32 *)(0xFFFFF478)) // AB Status Register Read-only 0x00000000
+N#define rPIOB_OWER		(*(volatile U32 *)(0xFFFFF4A0)) // Output Write Enable Write-only
+N#define rPIOB_OWDR		(*(volatile U32 *)(0xFFFFF4A4)) // Output Write Disable Write-only
+N#define rPIOB_OWSR		(*(volatile U32 *)(0xFFFFF4A8)) // Output Write Status Register Read-only 0x00000000
+N#define rPIOB_DELAYR0	(*(volatile U32 *)(0xFFFFF4C0)) // I/O Delay Register 0 Read/Write 0x00000000
+N#define rPIOB_DELAYR1	(*(volatile U32 *)(0xFFFFF4C4)) // I/O Delay Register 1 Read/Write 0x00000000
+N#define rPIOB_DELAYR2	(*(volatile U32 *)(0xFFFFF4C8)) // I/O Delay Register 2 Read/Write 0x00000000
+N#define rPIOB_DELAYR3	(*(volatile U32 *)(0xFFFFF4CC)) // I/O Delay Register 3 Read/Write 0x00000000
+N#define rPIOB_WPMR		(*(volatile U32 *)(0xFFFFF4E4)) // Write Protect Mode Register  Read-write 0x00000000
+N#define rPIOB_WPSR		(*(volatile U32 *)(0xFFFFF4E8)) // Write Protect Status Register 
+N
+N#define rPIOC_PER		(*(volatile U32 *)(0xFFFFF600)) // PIO Enable Register Write-only
+N#define rPIOC_PDR		(*(volatile U32 *)(0xFFFFF604)) // PIO Disable Register Write-only
+N#define rPIOC_PSR		(*(volatile U32 *)(0xFFFFF608)) // PIO Status Register Read-only
+N#define rPIOC_OER		(*(volatile U32 *)(0xFFFFF610)) // Output Enable Register Write-only
+N#define rPIOC_ODR		(*(volatile U32 *)(0xFFFFF614)) // Output Disable Register Write-only
+N#define rPIOC_OSR		(*(volatile U32 *)(0xFFFFF618)) // Output Status Register Read-only 0x00000000
+N#define rPIOC_IFER		(*(volatile U32 *)(0xFFFFF620)) // Glitch Input Filter Enable Register Write-only
+N#define rPIOC_IFDR		(*(volatile U32 *)(0xFFFFF624)) // Glitch Input Filter Disable Register Write-only
+N#define rPIOC_IFSR		(*(volatile U32 *)(0xFFFFF628)) // Glitch Input Filter Status Register Read-only 0x00000000
+N#define rPIOC_SODR		(*(volatile U32 *)(0xFFFFF630)) // Set Output Data Register Write-only
+N#define rPIOC_CODR		(*(volatile U32 *)(0xFFFFF634)) // Clear Output Data Register Write-only
+N#define rPIOC_ODSR		(*(volatile U32 *)(0xFFFFF638)) // Output Data Status Register 
+N#define rPIOC_PDSR		(*(volatile U32 *)(0xFFFFF63C)) // Pin Data Status Register Read-only
+N#define rPIOC_IER		(*(volatile U32 *)(0xFFFFF640)) // Interrupt Enable Register Write-only
+N#define rPIOC_IDR		(*(volatile U32 *)(0xFFFFF644)) // Interrupt Disable Register Write-only
+N#define rPIOC_IMR		(*(volatile U32 *)(0xFFFFF648)) // Interrupt Mask Register  Read-only 0x00000000
+N#define rPIOC_ISR		(*(volatile U32 *)(0xFFFFF64C)) // Interrupt Status Register Read-only 0x00000000
+N#define rPIOC_MDER		(*(volatile U32 *)(0xFFFFF650)) // Multi-driver Enable Register Write-only
+N#define rPIOC_MDDR		(*(volatile U32 *)(0xFFFFF654)) // Multi-driver Disable Register Write-only
+N#define rPIOC_MDSR		(*(volatile U32 *)(0xFFFFF658)) // Multi-driver Status Register Read-only 0x00000000
+N#define rPIOC_PUDR		(*(volatile U32 *)(0xFFFFF660)) // Pull-up Disable Register Write-only
+N#define rPIOC_PUER		(*(volatile U32 *)(0xFFFFF664)) // Pull-up Enable Register Write-only
+N#define rPIOC_PUSR		(*(volatile U32 *)(0xFFFFF668)) // Pad Pull-up Status Register Read-only 0x00000000
+N#define rPIOC_ASR		(*(volatile U32 *)(0xFFFFF670)) // Peripheral A Select Register Write-only
+N#define rPIOC_BSR		(*(volatile U32 *)(0xFFFFF674)) // Peripheral B Select Register Write-only
+N#define rPIOC_ABSR		(*(volatile U32 *)(0xFFFFF678)) // AB Status Register Read-only 0x00000000
+N#define rPIOC_OWER		(*(volatile U32 *)(0xFFFFF6A0)) // Output Write Enable Write-only
+N#define rPIOC_OWDR		(*(volatile U32 *)(0xFFFFF6A4)) // Output Write Disable Write-only
+N#define rPIOC_OWSR		(*(volatile U32 *)(0xFFFFF6A8)) // Output Write Status Register Read-only 0x00000000
+N#define rPIOC_DELAYR0	(*(volatile U32 *)(0xFFFFF6C0)) // I/O Delay Register 0 Read/Write 0x00000000
+N#define rPIOC_DELAYR1	(*(volatile U32 *)(0xFFFFF6C4)) // I/O Delay Register 1 Read/Write 0x00000000
+N#define rPIOC_DELAYR2	(*(volatile U32 *)(0xFFFFF6C8)) // I/O Delay Register 2 Read/Write 0x00000000
+N#define rPIOC_DELAYR3	(*(volatile U32 *)(0xFFFFF6CC)) // I/O Delay Register 3 Read/Write 0x00000000
+N#define rPIOC_WPMR		(*(volatile U32 *)(0xFFFFF6E4)) // Write Protect Mode Register  Read-write 0x00000000
+N#define rPIOC_WPSR		(*(volatile U32 *)(0xFFFFF6E8)) // Write Protect Status Register 
+N
+N#define rPIOD_PER		(*(volatile U32 *)(0xFFFFF800)) // PIO Enable Register Write-only
+N#define rPIOD_PDR		(*(volatile U32 *)(0xFFFFF804)) // PIO Disable Register Write-only
+N#define rPIOD_PSR		(*(volatile U32 *)(0xFFFFF808)) // PIO Status Register Read-only
+N#define rPIOD_OER		(*(volatile U32 *)(0xFFFFF810)) // Output Enable Register Write-only
+N#define rPIOD_ODR		(*(volatile U32 *)(0xFFFFF814)) // Output Disable Register Write-only
+N#define rPIOD_OSR		(*(volatile U32 *)(0xFFFFF818)) // Output Status Register Read-only 0x00000000
+N#define rPIOD_IFER		(*(volatile U32 *)(0xFFFFF820)) // Glitch Input Filter Enable Register Write-only
+N#define rPIOD_IFDR		(*(volatile U32 *)(0xFFFFF824)) // Glitch Input Filter Disable Register Write-only
+N#define rPIOD_IFSR		(*(volatile U32 *)(0xFFFFF828)) // Glitch Input Filter Status Register Read-only 0x00000000
+N#define rPIOD_SODR		(*(volatile U32 *)(0xFFFFF830)) // Set Output Data Register Write-only
+N#define rPIOD_CODR		(*(volatile U32 *)(0xFFFFF834)) // Clear Output Data Register Write-only
+N#define rPIOD_ODSR		(*(volatile U32 *)(0xFFFFF838)) // Output Data Status Register 
+N#define rPIOD_PDSR		(*(volatile U32 *)(0xFFFFF83C)) // Pin Data Status Register Read-only
+N#define rPIOD_IER		(*(volatile U32 *)(0xFFFFF840)) // Interrupt Enable Register Write-only
+N#define rPIOD_IDR		(*(volatile U32 *)(0xFFFFF844)) // Interrupt Disable Register Write-only
+N#define rPIOD_IMR		(*(volatile U32 *)(0xFFFFF848)) // Interrupt Mask Register  Read-only 0x00000000
+N#define rPIOD_ISR		(*(volatile U32 *)(0xFFFFF84C)) // Interrupt Status Register Read-only 0x00000000
+N#define rPIOD_MDER		(*(volatile U32 *)(0xFFFFF850)) // Multi-driver Enable Register Write-only
+N#define rPIOD_MDDR		(*(volatile U32 *)(0xFFFFF854)) // Multi-driver Disable Register Write-only
+N#define rPIOD_MDSR		(*(volatile U32 *)(0xFFFFF858)) // Multi-driver Status Register Read-only 0x00000000
+N#define rPIOD_PUDR		(*(volatile U32 *)(0xFFFFF860)) // Pull-up Disable Register Write-only
+N#define rPIOD_PUER		(*(volatile U32 *)(0xFFFFF864)) // Pull-up Enable Register Write-only
+N#define rPIOD_PUSR		(*(volatile U32 *)(0xFFFFF868)) // Pad Pull-up Status Register Read-only 0x00000000
+N#define rPIOD_ASR		(*(volatile U32 *)(0xFFFFF870)) // Peripheral A Select Register Write-only
+N#define rPIOD_BSR		(*(volatile U32 *)(0xFFFFF874)) // Peripheral B Select Register Write-only
+N#define rPIOD_ABSR		(*(volatile U32 *)(0xFFFFF878)) // AB Status Register Read-only 0x00000000
+N#define rPIOD_OWER		(*(volatile U32 *)(0xFFFFF8A0)) // Output Write Enable Write-only
+N#define rPIOD_OWDR		(*(volatile U32 *)(0xFFFFF8A4)) // Output Write Disable Write-only
+N#define rPIOD_OWSR		(*(volatile U32 *)(0xFFFFF8A8)) // Output Write Status Register Read-only 0x00000000
+N#define rPIOD_DELAYR0	(*(volatile U32 *)(0xFFFFF8C0)) // I/O Delay Register 0 Read/Write 0x00000000
+N#define rPIOD_DELAYR1	(*(volatile U32 *)(0xFFFFF8C4)) // I/O Delay Register 1 Read/Write 0x00000000
+N#define rPIOD_DELAYR2	(*(volatile U32 *)(0xFFFFF8C8)) // I/O Delay Register 2 Read/Write 0x00000000
+N#define rPIOD_DELAYR3	(*(volatile U32 *)(0xFFFFF8CC)) // I/O Delay Register 3 Read/Write 0x00000000
+N#define rPIOD_WPMR		(*(volatile U32 *)(0xFFFFF8E4)) // Write Protect Mode Register  Read-write 0x00000000
+N#define rPIOD_WPSR		(*(volatile U32 *)(0xFFFFF8E8)) // Write Protect Status Register 
+N
+N#define rPIOE_PER		(*(volatile U32 *)(0xFFFFFA00)) // PIO Enable Register Write-only
+N#define rPIOE_PDR		(*(volatile U32 *)(0xFFFFFA04)) // PIO Disable Register Write-only
+N#define rPIOE_PSR		(*(volatile U32 *)(0xFFFFFA08)) // PIO Status Register Read-only
+N#define rPIOE_OER		(*(volatile U32 *)(0xFFFFFA10)) // Output Enable Register Write-only
+N#define rPIOE_ODR		(*(volatile U32 *)(0xFFFFFA14)) // Output Disable Register Write-only
+N#define rPIOE_OSR		(*(volatile U32 *)(0xFFFFFA18)) // Output Status Register Read-only 0x00000000
+N#define rPIOE_IFER		(*(volatile U32 *)(0xFFFFFA20)) // Glitch Input Filter Enable Register Write-only
+N#define rPIOE_IFDR		(*(volatile U32 *)(0xFFFFFA24)) // Glitch Input Filter Disable Register Write-only
+N#define rPIOE_IFSR		(*(volatile U32 *)(0xFFFFFA28)) // Glitch Input Filter Status Register Read-only 0x00000000
+N#define rPIOE_SODR		(*(volatile U32 *)(0xFFFFFA30)) // Set Output Data Register Write-only
+N#define rPIOE_CODR		(*(volatile U32 *)(0xFFFFFA34)) // Clear Output Data Register Write-only
+N#define rPIOE_ODSR		(*(volatile U32 *)(0xFFFFFA38)) // Output Data Status Register 
+N#define rPIOE_PDSR		(*(volatile U32 *)(0xFFFFFA3C)) // Pin Data Status Register Read-only
+N#define rPIOE_IER		(*(volatile U32 *)(0xFFFFFA40)) // Interrupt Enable Register Write-only
+N#define rPIOE_IDR		(*(volatile U32 *)(0xFFFFFA44)) // Interrupt Disable Register Write-only
+N#define rPIOE_IMR		(*(volatile U32 *)(0xFFFFFA48)) // Interrupt Mask Register  Read-only 0x00000000
+N#define rPIOE_ISR		(*(volatile U32 *)(0xFFFFFA4C)) // Interrupt Status Register Read-only 0x00000000
+N#define rPIOE_MDER		(*(volatile U32 *)(0xFFFFFA50)) // Multi-driver Enable Register Write-only
+N#define rPIOE_MDDR		(*(volatile U32 *)(0xFFFFFA54)) // Multi-driver Disable Register Write-only
+N#define rPIOE_MDSR		(*(volatile U32 *)(0xFFFFFA58)) // Multi-driver Status Register Read-only 0x00000000
+N#define rPIOE_PUDR		(*(volatile U32 *)(0xFFFFFA60)) // Pull-up Disable Register Write-only
+N#define rPIOE_PUER		(*(volatile U32 *)(0xFFFFFA64)) // Pull-up Enable Register Write-only
+N#define rPIOE_PUSR		(*(volatile U32 *)(0xFFFFFA68)) // Pad Pull-up Status Register Read-only 0x00000000
+N#define rPIOE_ASR		(*(volatile U32 *)(0xFFFFFA70)) // Peripheral A Select Register Write-only
+N#define rPIOE_BSR		(*(volatile U32 *)(0xFFFFFA74)) // Peripheral B Select Register Write-only
+N#define rPIOE_ABSR		(*(volatile U32 *)(0xFFFFFA78)) // AB Status Register Read-only 0x00000000
+N#define rPIOE_OWER		(*(volatile U32 *)(0xFFFFFAA0)) // Output Write Enable Write-only
+N#define rPIOE_OWDR		(*(volatile U32 *)(0xFFFFFAA4)) // Output Write Disable Write-only
+N#define rPIOE_OWSR		(*(volatile U32 *)(0xFFFFFAA8)) // Output Write Status Register Read-only 0x00000000
+N#define rPIOE_DELAYR0	(*(volatile U32 *)(0xFFFFFAC0)) // I/O Delay Register 0 Read/Write 0x00000000
+N#define rPIOE_DELAYR1	(*(volatile U32 *)(0xFFFFFAC4)) // I/O Delay Register 1 Read/Write 0x00000000
+N#define rPIOE_DELAYR2	(*(volatile U32 *)(0xFFFFFAC8)) // I/O Delay Register 2 Read/Write 0x00000000
+N#define rPIOE_DELAYR3	(*(volatile U32 *)(0xFFFFFACC)) // I/O Delay Register 3 Read/Write 0x00000000
+N#define rPIOE_WPMR		(*(volatile U32 *)(0xFFFFFAE4)) // Write Protect Mode Register  Read-write 0x00000000
+N#define rPIOE_WPSR		(*(volatile U32 *)(0xFFFFFAE8)) // Write Protect Status Register 
+N
+N#define rDDRSDRC_MR		(*(volatile U32 *)(0xFFFFE600)) // DDRSDRC Mode Register Read-write 0x00000000
+N#define rDDRSDRC_RTR	(*(volatile U32 *)(0xFFFFE604)) // DDRSDRC Refresh Timer Register  Read-write 0x00000000
+N#define rDDRSDRC_CR		(*(volatile U32 *)(0xFFFFE608)) // DDRSDRC Configuration Register  Read-write 0x7024
+N#define rDDRSDRC_TPR0	(*(volatile U32 *)(0xFFFFE60C)) // DDRSDRC Timing Parameter 0 Register Read-write 0x20227225
+N#define rDDRSDRC_TPR1	(*(volatile U32 *)(0xFFFFE610)) // DDRSDRC Timing Parameter 1 Register Read-write 0x3c80808
+N#define rDDRSDRC_TPR2	(*(volatile U32 *)(0xFFFFE614)) // DDRSDRC Timing Parameter 2 Register Read-write 0x2062
+N#define rDDRSDRC_LPR	(*(volatile U32 *)(0xFFFFE61C)) // DDRSDRC Low-power Register Read-write 0x10000
+N#define rDDRSDRC_MD		(*(volatile U32 *)(0xFFFFE620)) // DDRSDRC Memory Device Register Read-write 0x10
+N#define rDDRSDRC_DLL	(*(volatile U32 *)(0xFFFFE624)) // DDRSDRC DLL Information Register Read-only 0x00000001
+N#define rDDRSDRC_HS		(*(volatile U32 *)(0xFFFFE62C)) // DDRSDRC High Speed Register Read-write 0x0
+N#define rDDRSDRC_DELAY1	(*(volatile U32 *)(0xFFFFE640)) // DDRSDRC Delay I/O Register Read-write 0x00000000
+N#define rDDRSDRC_DELAY2	(*(volatile U32 *)(0xFFFFE644)) // DDRSDRC Delay I/O Register Read-write 0x00000000
+N#define rDDRSDRC_DELAY3	(*(volatile U32 *)(0xFFFFE648)) // DDRSDRC Delay I/O Register Read-write 0x00000000
+N#define rDDRSDRC_DELAY4	(*(volatile U32 *)(0xFFFFE64C)) // DDRSDRC Delay I/O Register Read-write 0x00000000
+N#define rDDRSDRC_WPMR	(*(volatile U32 *)(0xFFFFE6E4)) // DDRSDRC Write Protect Mode Register Read-write 0x00000000
+N#define rDDRSDRC_WPSR	(*(volatile U32 *)(0xFFFFE6E8)) // DDRSDRC Write Protect Status Register
+N#define rDDRSD_BASE0	(*(volatile U32 *)(0x70000000)) // DDRSDRC Write Protect Status Register
+N#define rDDRSD_BASE1	(*(volatile U32 *)(0x72000000)) // DDRSDRC Write Protect Status Register
+N#define rDDRSD_BASE2	(*(volatile U32 *)(0x74000000)) // DDRSDRC Write Protect Status Register
+N#define rDDRSD_BASE3	(*(volatile U32 *)(0x76000000)) // DDRSDRC Write Protect Status Register
+N
+N#define rDBGU_CR		(*(volatile U32 *)(0xFFFFEE00)) // Control Register Write-only
+N#define rDBGU_MR		(*(volatile U32 *)(0xFFFFEE04)) // Mode Register Read-write 0x0
+N#define rDBGU_IER		(*(volatile U32 *)(0xFFFFEE08)) // Interrupt Enable Register Write-only
+N#define rDBGU_IDR		(*(volatile U32 *)(0xFFFFEE0C)) // Interrupt Disable Register Write-only
+N#define rDBGU_IMR		(*(volatile U32 *)(0xFFFFEE10)) // Interrupt Mask Register Read-only 0x0
+N#define rDBGU_SR		(*(volatile U32 *)(0xFFFFEE14)) // Status Register Read-only
+N#define rDBGU_RHR		(*(volatile U32 *)(0xFFFFEE18)) // Receive Holding Register Read-only 0x0
+N#define rDBGU_THR		(*(volatile U32 *)(0xFFFFEE1C)) // Transmit Holding Register Write-only
+N#define rDBGU_BRGR		(*(volatile U32 *)(0xFFFFEE20)) // Baud Rate Generator Register Read-write 0x0
+N#define rDBGU_CIDR		(*(volatile U32 *)(0xFFFFEE40)) // Chip ID Register Read-only
+N#define rDBGU_EXID		(*(volatile U32 *)(0xFFFFEE44)) // Chip ID Extension Register  Read-only
+N#define rDBGU_FNR		(*(volatile U32 *)(0xFFFFEE48)) // Force NTRST Register Read-write 0x0
+N#define rDBGU_RPR		(*(volatile U32 *)(0xFFFFEF00)) // Receive Pointer Register
+N#define rDBGU_RCR		(*(volatile U32 *)(0xFFFFEF04)) // Receive Counter Register
+N#define rDBGU_TPR		(*(volatile U32 *)(0xFFFFEF08)) // Transmit Pointer Register
+N#define rDBGU_TCR		(*(volatile U32 *)(0xFFFFEF0C)) // Transmit Counter Register
+N#define rDBGU_RNPR		(*(volatile U32 *)(0xFFFFEF10)) // Receive Next Pointer Register
+N#define rDBGU_RNCR		(*(volatile U32 *)(0xFFFFEF14)) // Receive Next Counter Register
+N#define rDBGU_TNPR		(*(volatile U32 *)(0xFFFFEF18)) // Transmit Next Pointer Register
+N#define rDBGU_TNCR		(*(volatile U32 *)(0xFFFFEF1C)) // Transmit Next Counter Register
+N#define rDBGU_PTCR		(*(volatile U32 *)(0xFFFFEF20)) // PDC Transfer Control Register
+N#define rDBGU_PTSR		(*(volatile U32 *)(0xFFFFEF24))	// PDC Transfer Status Register
+N
+N#define rUS_CR(ch)		(*(volatile U32 *)(0xFFF8C000+ch*0x4000+0x0000))
+N#define rUS_MR(ch)		(*(volatile U32 *)(0xFFF8C000+ch*0x4000+0x0004))
+N#define rUS_IER(ch)		(*(volatile U32 *)(0xFFF8C000+ch*0x4000+0x0008))
+N#define rUS_IDR(ch)		(*(volatile U32 *)(0xFFF8C000+ch*0x4000+0x000C))
+N#define rUS_IMR(ch)		(*(volatile U32 *)(0xFFF8C000+ch*0x4000+0x0010))
+N#define rUS_CSR(ch)		(*(volatile U32 *)(0xFFF8C000+ch*0x4000+0x0014))
+N#define rUS_RHR(ch)		(*(volatile U32 *)(0xFFF8C000+ch*0x4000+0x0018))
+N#define rUS_THR(ch)		(*(volatile U32 *)(0xFFF8C000+ch*0x4000+0x001C))
+N#define rUS_BRGR(ch)	(*(volatile U32 *)(0xFFF8C000+ch*0x4000+0x0020))
+N#define rUS_RTOR(ch)	(*(volatile U32 *)(0xFFF8C000+ch*0x4000+0x0024))
+N#define rUS_TTGR(ch)	(*(volatile U32 *)(0xFFF8C000+ch*0x4000+0x0028))
+N#define rUS_FIDI(ch)	(*(volatile U32 *)(0xFFF8C000+ch*0x4000+0x0040))
+N#define rUS_NER(ch)		(*(volatile U32 *)(0xFFF8C000+ch*0x4000+0x0044))
+N#define rUS_IF(ch)		(*(volatile U32 *)(0xFFF8C000+ch*0x4000+0x004C))
+N#define rUS_MAN(ch)		(*(volatile U32 *)(0xFFF8C000+ch*0x4000+0x0050))
+N#define rUS_LINMR(ch)	(*(volatile U32 *)(0xFFF8C000+ch*0x4000+0x0054))
+N#define rUS_LINIR(ch)	(*(volatile U32 *)(0xFFF8C000+ch*0x4000+0x0058))
+N
+N#define rSPI_CR(ch)		(*(volatile U32 *)(0xFFFA4000+ch*0x4000+0x00)) // Control Register  Write-only ---
+N#define rSPI_MR(ch)		(*(volatile U32 *)(0xFFFA4000+ch*0x4000+0x04)) // Mode Register  Read-write 0x0
+N#define rSPI_RDR(ch)	(*(volatile U32 *)(0xFFFA4000+ch*0x4000+0x08)) // Receive Data Register  Read-only 0x0
+N#define rSPI_TDR(ch)	(*(volatile U32 *)(0xFFFA4000+ch*0x4000+0x0C)) // Transmit Data Register  Write-only ---
+N#define rSPI_SR(ch)		(*(volatile U32 *)(0xFFFA4000+ch*0x4000+0x10)) // Status Register  Read-only 
+N#define rSPI_IER(ch)	(*(volatile U32 *)(0xFFFA4000+ch*0x4000+0x14)) // Interrupt Enable Register  Write-only ---
+N#define rSPI_IDR(ch)	(*(volatile U32 *)(0xFFFA4000+ch*0x4000+0x18)) // Interrupt Disable Register  Write-only ---
+N#define rSPI_IMR(ch)	(*(volatile U32 *)(0xFFFA4000+ch*0x4000+0x1C)) // Interrupt Mask Register  Read-only 0x0
+N#define rSPI_CSR0(ch)	(*(volatile U32 *)(0xFFFA4000+ch*0x4000+0x30)) // Chip Select Register 0  Read-write 0x0
+N#define rSPI_RPR(ch)	(*(volatile U32 *)(0xFFFA4000+ch*0x4000+0x100)) // Receive Pointer Register
+N#define rSPI_RCR(ch)	(*(volatile U32 *)(0xFFFA4000+ch*0x4000+0x104)) // Receive Counter Register
+N#define rSPI_TPR(ch)	(*(volatile U32 *)(0xFFFA4000+ch*0x4000+0x108)) // Transmit Pointer Register
+N#define rSPI_TCR(ch)	(*(volatile U32 *)(0xFFFA4000+ch*0x4000+0x10C)) // Transmit Counter Register
+N#define rSPI_RNPR(ch)	(*(volatile U32 *)(0xFFFA4000+ch*0x4000+0x110)) // Receive Next Pointer Register
+N#define rSPI_RNCR(ch)	(*(volatile U32 *)(0xFFFA4000+ch*0x4000+0x114)) // Receive Next Counter Register
+N#define rSPI_TNPR(ch)	(*(volatile U32 *)(0xFFFA4000+ch*0x4000+0x118)) // Transmit Next Pointer Register
+N#define rSPI_TNCR(ch)	(*(volatile U32 *)(0xFFFA4000+ch*0x4000+0x11C)) // Transmit Next Counter Register
+N#define rSPI_PTCR(ch)	(*(volatile U32 *)(0xFFFA4000+ch*0x4000+0x120)) // PDC Transfer Control Register
+N#define rSPI_PTSR(ch)	(*(volatile U32 *)(0xFFFA4000+ch*0x4000+0x124))	// PDC Transfer Status Register
+N
+N#define rHSMCI_CR(ch)		(*(volatile U32 *)(0xFFF80000+ch*50000+0x00)) // Control Register 
+N#define rHSMCI_MR(ch)		(*(volatile U32 *)(0xFFF80000+ch*50000+0x04)) // Mode Register Read-write 0x0
+N#define rHSMCI_DTOR(ch)		(*(volatile U32 *)(0xFFF80000+ch*50000+0x08)) // Data Timeout Register Read-write 0x0
+N#define rHSMCI_SDCR(ch)		(*(volatile U32 *)(0xFFF80000+ch*50000+0x0C)) // SD/SDIO Card Register Read-write 0x0
+N#define rHSMCI_ARGR(ch)		(*(volatile U32 *)(0xFFF80000+ch*50000+0x10)) // Argument Register  Read-write 0x0
+N#define rHSMCI_CMDR(ch)		(*(volatile U32 *)(0xFFF80000+ch*50000+0x14)) // Command Register  Write
+N#define rHSMCI_BLKR(ch)		(*(volatile U32 *)(0xFFF80000+ch*50000+0x18)) // Block Register  Read-write 0x0
+N#define rHSMCI_CSTOR(ch)	(*(volatile U32 *)(0xFFF80000+ch*50000+0x1C)) // Completion Signal Timeout Register  Read-write 0x0
+N#define rHSMCI_RSPR0(ch)	(*(volatile U32 *)(0xFFF80000+ch*50000+0x20)) // Response Register Read 0x0
+N#define rHSMCI_RSPR1(ch)	(*(volatile U32 *)(0xFFF80000+ch*50000+0x24)) // Response Register Read 0x0
+N#define rHSMCI_RSPR2(ch)	(*(volatile U32 *)(0xFFF80000+ch*50000+0x28)) // Response Register Read 0x0
+N#define rHSMCI_RSPR3(ch)	(*(volatile U32 *)(0xFFF80000+ch*50000+0x2C)) // Response Register Read 0x0
+N#define rHSMCI_RDR(ch)		(*(volatile U32 *)(0xFFF80000+ch*50000+0x30)) // Receive Data Register Read 0x0
+N#define rHSMCI_TDR(ch)		(*(volatile U32 *)(0xFFF80000+ch*50000+0x34)) // Transmit Data Register Write
+N#define rHSMCI_SR(ch)		(*(volatile U32 *)(0xFFF80000+ch*50000+0x40)) // Status Register Read 0xC0E5
+N#define rHSMCI_IER(ch)		(*(volatile U32 *)(0xFFF80000+ch*50000+0x44)) // Interrupt Enable Register Write
+N#define rHSMCI_IDR(ch)		(*(volatile U32 *)(0xFFF80000+ch*50000+0x48)) // Interrupt Disable Register Write
+N#define rHSMCI_IMR(ch)		(*(volatile U32 *)(0xFFF80000+ch*50000+0x4C)) // Interrupt Mask Register Read 0x0
+N#define rHSMCI_DMA(ch)		(*(volatile U32 *)(0xFFF80000+ch*50000+0x50)) // DMA Configuration Register Read-write 0x00
+N#define rHSMCI_CFG(ch)		(*(volatile U32 *)(0xFFF80000+ch*50000+0x54)) // Configuration Register Read-write 0x00
+N#define rHSMCI_WPMR(ch)		(*(volatile U32 *)(0xFFF80000+ch*50000+0xE4)) // Write Protection Mode Register Read-write
+N#define rHSMCI_WPSR(ch)		(*(volatile U32 *)(0xFFF80000+ch*50000+0xE8)) // Write Protection Status Register Read-only
+N#define HSMCI_FIFO(ch)		(0xFFF80000+ch*50000+0x200) // FIFO Memory Aperture 0x200-0x3FFC
+N
+N#define rPWM_MR 		(*(volatile U32 *)(0xFFFB8000))
+N#define rPWM_ENA		(*(volatile U32 *)(0xFFFB8000+0x04))
+N#define rPWM_DIS		(*(volatile U32 *)(0xFFFB8000+0x08))
+N#define rPWM_SR			(*(volatile U32 *)(0xFFFB8000+0x0C))
+N#define rPWM_IER		(*(volatile U32 *)(0xFFFB8000+0x10))
+N#define rPWM_IDR		(*(volatile U32 *)(0xFFFB8000+0x14))
+N#define rPWM_IMR		(*(volatile U32 *)(0xFFFB8000+0x18))
+N#define rPWM_ISR		(*(volatile U32 *)(0xFFFB8000+0x1C))
+N#define rPWM_CMR(ch)	(*(volatile U32 *)(0xFFFB8000+0x200+ch*0x20+0x00))
+N#define rPWM_CDTY(ch)	(*(volatile U32 *)(0xFFFB8000+0x200+ch*0x20+0x04))
+N#define rPWM_CPRD(ch)	(*(volatile U32 *)(0xFFFB8000+0x200+ch*0x20+0x08))
+N#define rPWM_CCNT(ch)	(*(volatile U32 *)(0xFFFB8000+0x200+ch*0x20+0x0C))
+N#define rPWM_CUPD(ch)	(*(volatile U32 *)(0xFFFB8000+0x200+ch*0x20+0x10))
+N
+N#endif /*__SOC_H__*/
+N
+L 10 "init_hw.c" 2
+N#include "init_hw.h"
+L 1 "init_hw.h" 1
+N#ifndef __INIT_HW_H__
+N#define __INIT_HW_H__
+N
+N#define PERIF_ID_FIQ    ( 0) // Advanced Interrupt Controller (FIQ)
+N#define PERIF_ID_SYS    ( 1) // System Controller
+N#define PERIF_ID_PIOA   ( 2) // Parallel IO Controller A
+N#define PERIF_ID_PIOB   ( 3) // Parallel IO Controller B
+N#define PERIF_ID_PIOC   ( 4) // Parallel IO Controller C
+N#define PERIF_ID_PIOD_E ( 5) // Parallel IO Controller D and E
+N#define PERIF_ID_TRNG   ( 6) // True Random Number Generator
+N#define PERIF_ID_US0    ( 7) // USART 0
+N#define PERIF_ID_US1    ( 8) // USART 1
+N#define PERIF_ID_US2    ( 9) // USART 2
+N#define PERIF_ID_US3    (10) // USART 2
+N#define PERIF_ID_MCI0   (11) // Multimedia Card Interface 0
+N#define PERIF_ID_TWI0   (12) // TWI 0
+N#define PERIF_ID_TWI1   (13) // TWI 1
+N#define PERIF_ID_SPI0   (14) // Serial Peripheral Interface
+N#define PERIF_ID_SPI1   (15) // Serial Peripheral Interface
+N#define PERIF_ID_SSC0   (16) // Serial Synchronous Controller 0
+N#define PERIF_ID_SSC1   (17) // Serial Synchronous Controller 1
+N#define PERIF_ID_TC     (18) // Timer Counter 0, 1, 2, 3, 4, 5
+N#define PERIF_ID_PWMC   (19) // Pulse Width Modulation Controller
+N#define PERIF_ID_TSADC  (20) // Touch Screen Controller
+N#define PERIF_ID_HDMA   (21) // HDMA
+N#define PERIF_ID_UHPHS  (22) // USB Host High Speed
+N#define PERIF_ID_LCDC   (23) // LCD Controller
+N#define PERIF_ID_AC97C  (24) // AC97 Controller
+N#define PERIF_ID_EMAC   (25) // Ethernet MAC
+N#define PERIF_ID_ISI    (26) // Image Sensor Interface
+N#define PERIF_ID_UDPHS  (27) // USB Device HS
+N
+N#define PERIF_ID_MCI1   (29) // Multimedia Card Interface 1
+N#define PERIF_ID_VDEC   (30) // Video Decoder
+N#define PERIF_ID_IRQ0   (31) // Advanced Interrupt Controller (IRQ0)
+N
+Nvoid InitHW(void);
+N
+N#endif /* __INIT_HW_H__ */
+L 11 "init_hw.c" 2
+N
+Nstatic void InitHW_Basic(void);
+Nstatic void InitHW_Clock(void);
+Nstatic void InitHW_GPIO(void);
+N
+Nstatic void InitHW_AIC(void);
+Nstatic void InitHW_LED(void);
+Nstatic void InitHW_RTC(void);
+Nstatic void InitHW_DDRAM(void);
+Nstatic void InitHW_EMIF(void);
+N
+Nstatic void InitHW_DBGU(void);
+N
+Nstatic void SFR_DELAY(U32 time);
+N
+Nvoid defaultSpuriousHandler(void);
+Nvoid defaultFiqHandler(void);
+Nvoid defaultIrqHandler(void);
+N
+Nvoid InitHW(void)
+N{
+N	InitHW_Basic();
+N	InitHW_Clock();
+N	InitHW_AIC();
+N	
+N	rMATRIX_MRCR = (0x1 << 0) | (0x1 << 1);
+X	(*(volatile U32 *)(0xFFFFEB00)) = (0x1 << 0) | (0x1 << 1);
+N	
+N	rRTT_MR &= ~((0x1 << 16) | (0x1 << 17));
+X	(*(volatile U32 *)(0xFFFFFD20)) &= ~((0x1 << 16) | (0x1 << 17));
+N	rPIT_MR &= ~((0x1 << 24) | (0x1 << 25));
+X	(*(volatile U32 *)(0xFFFFFD30)) &= ~((0x1 << 24) | (0x1 << 25));
+N	
+N	InitHW_GPIO();
+N	InitHW_DDRAM();
+N	InitHW_RTC();
+N	InitHW_EMIF();
+N	InitHW_LED();
+N	InitHW_DBGU();
+N	
+N	rPIOA_SODR = (1<<29);
+X	(*(volatile U32 *)(0xFFFFF230)) = (1<<29);
+N}
+N
+Nstatic void InitHW_Basic(void)
+N{
+N	rWDT_SR			= 0x3EFF8FFF;	// Disable the dame watch dog timer
+X	(*(volatile U32 *)(0xFFFFFD44))			= 0x3EFF8FFF;	
+N	rSHDW_MR		= 0x00000001;	// Enable Wake-up button
+X	(*(volatile U32 *)(0xFFFFFD14))		= 0x00000001;	
+N	rSYS_RSTC		= 0xA5000001;	// Enable external reset
+X	(*(volatile U32 *)(0xFFFFFD08))		= 0xA5000001;	
+N}
+N
+Nstatic void InitHW_Clock(void)
+N{
+N	rCKGR_MOR		= 0x00008001;	// Try to Enable the 12 MHz Crystal Oscillator
+X	(*(volatile U32 *)(0xFFFFFC20))		= 0x00008001;	
+N
+N	while((rPMC_SR & 0x1) != 0x1);	// Let the 12 MHz be stable.
+X	while(((*(volatile U32 *)(0xFFFFFC68)) & 0x1) != 0x1);	
+N	
+N	rPMC_MCKR		= 0x00001301;	// Switch the System Clock to 12 MHz
+X	(*(volatile U32 *)(0xFFFFFC30))		= 0x00001301;	
+N
+N	/* DIV = 3, MUL = 199 (MAIN_CLOCK = 12MHz, APLL = 800MHz, SYS_CLK = 400MHz) */
+N	
+N	rPMC_PLLICPR	= 0x0;			// PLL CP Current setting
+X	(*(volatile U32 *)(0xFFFFFC80))	= 0x0;			
+N	rCKGR_PLLAR 	= 0x20C73F03;
+X	(*(volatile U32 *)(0xFFFFFC28)) 	= 0x20C73F03;
+N	
+N	while((rPMC_SR & 0x3) != 0x3);
+X	while(((*(volatile U32 *)(0xFFFFFC68)) & 0x3) != 0x3);
+N	
+N	/* MCLK = 133MHz, DDR_CLK = 133MHz, DDR_Rate = 266MHz */
+N	
+N	rPMC_MCKR		= 0x00001302;
+X	(*(volatile U32 *)(0xFFFFFC30))		= 0x00001302;
+N
+N	while((rPMC_SR & 0xF) != 0xB);
+X	while(((*(volatile U32 *)(0xFFFFFC68)) & 0xF) != 0xB);
+N
+N	rCKGR_UCKR		= 0xF1F10000;		// Enable UPLL
+X	(*(volatile U32 *)(0xFFFFFC1C))		= 0xF1F10000;		
+N	while(((rPMC_SR>>6) & 0x1) != 0x1);
+X	while((((*(volatile U32 *)(0xFFFFFC68))>>6) & 0x1) != 0x1);
+N
+N	if(rSCKCR != 0x0000000A)	// Enable the 32k Quartz Crystal
+X	if((*(volatile U32 *)(0xFFFFFD50)) != 0x0000000A)	
+N	{
+N		rSCKCR		= 0x00000003;	
+X		(*(volatile U32 *)(0xFFFFFD50))		= 0x00000003;	
+N		SFR_DELAY(5);	
+N		rSCKCR		= 0x0000000B;
+X		(*(volatile U32 *)(0xFFFFFD50))		= 0x0000000B;
+N		SFR_DELAY(5);
+N		rSCKCR		= 0x0000000A; 
+X		(*(volatile U32 *)(0xFFFFFD50))		= 0x0000000A; 
+N		SFR_DELAY(5);
+N	}
+N
+N	rPMC_SCER		= 0x344;
+X	(*(volatile U32 *)(0xFFFFFC00))		= 0x344;
+N	
+N//	EFECD17C 0824000C
+N	
+N//	rPMC_PCDR		= 0xEFECD97C;
+N//	rPMC_PCER		= 0xEFECD97C;
+N	
+N	rPMC_PCER		= 0x0028503C;
+X	(*(volatile U32 *)(0xFFFFFC10))		= 0x0028503C;
+N	rPMC_PCDR		= 0xFFD7AFC0;
+X	(*(volatile U32 *)(0xFFFFFC14))		= 0xFFD7AFC0;
+N	
+N	rPMC_PCK0		= 0x106;	// Set the PCK0 = 66.66 MHz
+X	(*(volatile U32 *)(0xFFFFFC40))		= 0x106;	
+N	rPMC_PCK1		= 0x106;	// Set the PCK1 = 66.66 MHz
+X	(*(volatile U32 *)(0xFFFFFC44))		= 0x106;	
+N	while(((rPMC_SR>>8) & 0x3) != 0x3);
+X	while((((*(volatile U32 *)(0xFFFFFC68))>>8) & 0x3) != 0x3);
+N}
+N
+Nstatic void InitHW_AIC(void)
+N{
+N	U32 i = 0;
+N	
+N	rAIC_IDCR = 0xFFFFFFFF;
+X	(*(volatile U32 *)(0xFFFFF124)) = 0xFFFFFFFF;
+N    rAIC_SVR(0) = (U32) defaultFiqHandler;
+X    (*(volatile U32 *)(0xFFFFF000+0*0x4+0x80)) = (U32) defaultFiqHandler;
+N    for (i = 1; i < 31; i++) rAIC_SVR(i) = (U32) defaultIrqHandler;
+X    for (i = 1; i < 31; i++) (*(volatile U32 *)(0xFFFFF000+i*0x4+0x80)) = (U32) defaultIrqHandler;
+N    rAIC_SPU = (U32) defaultSpuriousHandler;
+X    (*(volatile U32 *)(0xFFFFF134)) = (U32) defaultSpuriousHandler;
+N    for (i = 0; i < 8 ; i++) rAIC_EOICR = 0;
+X    for (i = 0; i < 8 ; i++) (*(volatile U32 *)(0xFFFFF130)) = 0;
+N}
+N
+N
+Nstatic void InitHW_RTC(void)
+N{
+N
+N}
+N
+Nstatic void InitHW_LED(void)
+N{
+N	//	PWM mode register
+N	//	Since MCLK = 133.33 MHz
+N	//	Set CLKA = 66.66 MHz
+N	//	Set CLKB = 1 kHz
+N	rPWM_MR		= (0x0 << 28) + (0xA << 24) + (0x82 << 16) + (0x0 << 12) + (0x1 << 8) + (0x1 << 0);
+X	(*(volatile U32 *)(0xFFFB8000))		= (0x0 << 28) + (0xA << 24) + (0x82 << 16) + (0x0 << 12) + (0x1 << 8) + (0x1 << 0);
+N	rPWM_ENA	= 0xF; // Enalbe all PWM channels
+X	(*(volatile U32 *)(0xFFFB8000+0x04))	= 0xF; 
+N	rPWM_IDR	= 0xF; // Disable PWM as interrupt source
+X	(*(volatile U32 *)(0xFFFB8000+0x14))	= 0xF; 
+N
+N	rPWM_CMR(0)		= 0xC;
+X	(*(volatile U32 *)(0xFFFB8000+0x200+0*0x20+0x00))		= 0xC;
+N	rPWM_CDTY(0)	= 0x1F4;
+X	(*(volatile U32 *)(0xFFFB8000+0x200+0*0x20+0x04))	= 0x1F4;
+N	rPWM_CPRD(0)	= 0x3E8;
+X	(*(volatile U32 *)(0xFFFB8000+0x200+0*0x20+0x08))	= 0x3E8;
+N	rPWM_CUPD(0)	= 0x0;
+X	(*(volatile U32 *)(0xFFFB8000+0x200+0*0x20+0x10))	= 0x0;
+N
+N	rPWM_CMR(1)		= 0xC;
+X	(*(volatile U32 *)(0xFFFB8000+0x200+1*0x20+0x00))		= 0xC;
+N	rPWM_CDTY(1)	= 0x1F4;
+X	(*(volatile U32 *)(0xFFFB8000+0x200+1*0x20+0x04))	= 0x1F4;
+N	rPWM_CPRD(1)	= 0x3E8;
+X	(*(volatile U32 *)(0xFFFB8000+0x200+1*0x20+0x08))	= 0x3E8;
+N	rPWM_CUPD(1)	= 0x0;
+X	(*(volatile U32 *)(0xFFFB8000+0x200+1*0x20+0x10))	= 0x0;
+N	
+N	rPWM_CMR(2)		= 0xC;
+X	(*(volatile U32 *)(0xFFFB8000+0x200+2*0x20+0x00))		= 0xC;
+N	rPWM_CDTY(2)	= 0x1F4;
+X	(*(volatile U32 *)(0xFFFB8000+0x200+2*0x20+0x04))	= 0x1F4;
+N	rPWM_CPRD(2)	= 0x3E8;
+X	(*(volatile U32 *)(0xFFFB8000+0x200+2*0x20+0x08))	= 0x3E8;
+N	rPWM_CUPD(2)	= 0x0;
+X	(*(volatile U32 *)(0xFFFB8000+0x200+2*0x20+0x10))	= 0x0;
+N	
+N	rPWM_CMR(3)		= 0xC;
+X	(*(volatile U32 *)(0xFFFB8000+0x200+3*0x20+0x00))		= 0xC;
+N	rPWM_CDTY(3)	= 0x1F4;
+X	(*(volatile U32 *)(0xFFFB8000+0x200+3*0x20+0x04))	= 0x1F4;
+N	rPWM_CPRD(3)	= 0x3E8;
+X	(*(volatile U32 *)(0xFFFB8000+0x200+3*0x20+0x08))	= 0x3E8;
+N	rPWM_CUPD(3)	= 0x0;
+X	(*(volatile U32 *)(0xFFFB8000+0x200+3*0x20+0x10))	= 0x0;
+N
+N}
+N
+Nstatic void InitHW_DBGU(void)
+N{
+N	rDBGU_CR = (0x1 << 7) + (0x1 << 5) + (0x1 << 3) + (0x1 << 2);
+X	(*(volatile U32 *)(0xFFFFEE00)) = (0x1 << 7) + (0x1 << 5) + (0x1 << 3) + (0x1 << 2);
+N	rDBGU_IDR = 0xFFFFFFFF;
+X	(*(volatile U32 *)(0xFFFFEE0C)) = 0xFFFFFFFF;
+N	rDBGU_BRGR = 0x48; // (5 << 16) + 144; (0x48)
+X	(*(volatile U32 *)(0xFFFFEE20)) = 0x48; 
+N	rDBGU_MR = (0x0 << 14) + (0x4 << 9);
+X	(*(volatile U32 *)(0xFFFFEE04)) = (0x0 << 14) + (0x4 << 9);
+N	rDBGU_PTCR = (0x1 << 1) | (0x1 << 9);
+X	(*(volatile U32 *)(0xFFFFEF20)) = (0x1 << 1) | (0x1 << 9);
+N	rDBGU_CR = (0x1 << 6) + (0x1 << 4);
+X	(*(volatile U32 *)(0xFFFFEE00)) = (0x1 << 6) + (0x1 << 4);
+N}
+N
+Nstatic void InitHW_EMIF(void)
+N{
+N
+N}
+N
+Nstatic void InitHW_GPIO(void)
+N{
+N	rPIOA_PER	= 0x780003C0;
+X	(*(volatile U32 *)(0xFFFFF200))	= 0x780003C0;
+N	rPIOA_PDR	= 0x87FFFC3F;
+X	(*(volatile U32 *)(0xFFFFF204))	= 0x87FFFC3F;
+N	rPIOA_OER	= 0x20000000;
+X	(*(volatile U32 *)(0xFFFFF210))	= 0x20000000;
+N	rPIOA_ODR	= 0x580003C0;
+X	(*(volatile U32 *)(0xFFFFF214))	= 0x580003C0;
+N	rPIOA_IFER	= 0x0;
+X	(*(volatile U32 *)(0xFFFFF220))	= 0x0;
+N	rPIOA_IFDR	= 0x0;
+X	(*(volatile U32 *)(0xFFFFF224))	= 0x0;
+N	rPIOA_SODR	= 0x0;
+X	(*(volatile U32 *)(0xFFFFF230))	= 0x0;
+N	rPIOA_CODR	= 0x20000000;
+X	(*(volatile U32 *)(0xFFFFF234))	= 0x20000000;
+N	rPIOA_IER	= 0x0;
+X	(*(volatile U32 *)(0xFFFFF240))	= 0x0;
+N	rPIOA_IDR	= 0xFFFFFFFF;
+X	(*(volatile U32 *)(0xFFFFF244))	= 0xFFFFFFFF;
+N	rPIOA_IMR	= 0x0;
+X	(*(volatile U32 *)(0xFFFFF248))	= 0x0;
+N	rPIOA_MDER	= 0x0;
+X	(*(volatile U32 *)(0xFFFFF250))	= 0x0;
+N	rPIOA_MDDR	= 0xFFFFFFFF;
+X	(*(volatile U32 *)(0xFFFFF254))	= 0xFFFFFFFF;
+N	rPIOA_PUDR	= 0xFFFFFFFF;
+X	(*(volatile U32 *)(0xFFFFF260))	= 0xFFFFFFFF;
+N	rPIOA_PUER	= 0x583003C0;
+X	(*(volatile U32 *)(0xFFFFF264))	= 0x583003C0;
+N	rPIOA_ASR	= 0x87FFFC3F;
+X	(*(volatile U32 *)(0xFFFFF270))	= 0x87FFFC3F;
+N	rPIOA_BSR	= 0x0;
+X	(*(volatile U32 *)(0xFFFFF274))	= 0x0;
+N	
+N	rPIOB_PER	= 0xFC0C0;
+X	(*(volatile U32 *)(0xFFFFF400))	= 0xFC0C0;
+N	rPIOB_PDR	= 0xFFF03F3F;
+X	(*(volatile U32 *)(0xFFFFF404))	= 0xFFF03F3F;
+N	rPIOB_OER	= 0xB8000;
+X	(*(volatile U32 *)(0xFFFFF410))	= 0xB8000;
+N	
+N	//rPIOB_PER	= 0xE40C0;
+N	//rPIOB_PDR	= 0xFFF1BF3F;
+N	//rPIOB_OER	= 0xA0000;
+N	rPIOB_ODR	= 0x440C0;
+X	(*(volatile U32 *)(0xFFFFF414))	= 0x440C0;
+N	rPIOB_IFER	= 0x0;
+X	(*(volatile U32 *)(0xFFFFF420))	= 0x0;
+N	rPIOB_IFDR	= 0x0;
+X	(*(volatile U32 *)(0xFFFFF424))	= 0x0;
+N	rPIOB_SODR	= 0x80000;
+X	(*(volatile U32 *)(0xFFFFF430))	= 0x80000;
+N	rPIOB_CODR	= 0x20000;
+X	(*(volatile U32 *)(0xFFFFF434))	= 0x20000;
+N	rPIOB_IER	= 0x0; 			// 0x44000;
+X	(*(volatile U32 *)(0xFFFFF440))	= 0x0; 			
+N	rPIOB_IDR	= 0xFFFFFFFF;	// 0xFFFBBFFF;
+X	(*(volatile U32 *)(0xFFFFF444))	= 0xFFFFFFFF;	
+N	rPIOB_IMR	= 0x0;
+X	(*(volatile U32 *)(0xFFFFF448))	= 0x0;
+N	rPIOB_MDER	= 0x0;
+X	(*(volatile U32 *)(0xFFFFF450))	= 0x0;
+N	rPIOB_MDDR	= 0xFFFFFFFF;
+X	(*(volatile U32 *)(0xFFFFF454))	= 0xFFFFFFFF;
+N	rPIOB_PUDR	= 0xFFFFFFFF;
+X	(*(volatile U32 *)(0xFFFFF460))	= 0xFFFFFFFF;
+N	rPIOB_PUER	= 0xFFFC7FFF;
+X	(*(volatile U32 *)(0xFFFFF464))	= 0xFFFC7FFF;
+N	rPIOB_ASR	= 0xFFF1B03F;
+X	(*(volatile U32 *)(0xFFFFF470))	= 0xFFF1B03F;
+N	rPIOB_BSR	= 0xF00;
+X	(*(volatile U32 *)(0xFFFFF474))	= 0xF00;
+N	rPIOC_PER	= 0x1F83;
+X	(*(volatile U32 *)(0xFFFFF600))	= 0x1F83;
+N	rPIOC_PDR	= 0xFFFFE07C;
+X	(*(volatile U32 *)(0xFFFFF604))	= 0xFFFFE07C;
+N	rPIOC_OER	= 0x0;
+X	(*(volatile U32 *)(0xFFFFF610))	= 0x0;
+N	rPIOC_ODR	= 0x1F83;
+X	(*(volatile U32 *)(0xFFFFF614))	= 0x1F83;
+N	rPIOC_IFER	= 0x0;
+X	(*(volatile U32 *)(0xFFFFF620))	= 0x0;
+N	rPIOC_IFDR	= 0x1F83;
+X	(*(volatile U32 *)(0xFFFFF624))	= 0x1F83;
+N	rPIOC_SODR	= 0x0;
+X	(*(volatile U32 *)(0xFFFFF630))	= 0x0;
+N	rPIOC_CODR	= 0x0;
+X	(*(volatile U32 *)(0xFFFFF634))	= 0x0;
+N	rPIOC_IER	= 0x0;
+X	(*(volatile U32 *)(0xFFFFF640))	= 0x0;
+N	rPIOC_IDR	= 0xFFFFFFFF;
+X	(*(volatile U32 *)(0xFFFFF644))	= 0xFFFFFFFF;
+N	rPIOC_IMR	= 0x0;
+X	(*(volatile U32 *)(0xFFFFF648))	= 0x0;
+N	rPIOC_MDER	= 0x0;
+X	(*(volatile U32 *)(0xFFFFF650))	= 0x0;
+N	rPIOC_MDDR	= 0xFFFFFFFF;
+X	(*(volatile U32 *)(0xFFFFF654))	= 0xFFFFFFFF;
+N	rPIOC_PUDR	= 0x0;
+X	(*(volatile U32 *)(0xFFFFF660))	= 0x0;
+N	rPIOC_PUER	= 0xFFFFFFFF;
+X	(*(volatile U32 *)(0xFFFFF664))	= 0xFFFFFFFF;
+N	rPIOC_ASR	= 0xFFFFE07C;
+X	(*(volatile U32 *)(0xFFFFF670))	= 0xFFFFE07C;
+N	rPIOC_BSR	= 0x0;
+X	(*(volatile U32 *)(0xFFFFF674))	= 0x0;
+N	rPIOD_PER	= 0x180FEC3E;
+X	(*(volatile U32 *)(0xFFFFF800))	= 0x180FEC3E;
+N	rPIOD_PDR	= 0xE7F013C1;
+X	(*(volatile U32 *)(0xFFFFF804))	= 0xE7F013C1;
+N	rPIOD_OER	= 0x8000004;
+X	(*(volatile U32 *)(0xFFFFF810))	= 0x8000004;
+N	rPIOD_ODR	= 0x100FEC3A;
+X	(*(volatile U32 *)(0xFFFFF814))	= 0x100FEC3A;
+N	rPIOD_IFER	= 0x30000;
+X	(*(volatile U32 *)(0xFFFFF820))	= 0x30000;
+N	rPIOD_IFDR	= 0x1000EC38;
+X	(*(volatile U32 *)(0xFFFFF824))	= 0x1000EC38;
+N	rPIOD_SODR	= 0x4;
+X	(*(volatile U32 *)(0xFFFFF830))	= 0x4;
+N	rPIOD_CODR	= 0x8000000;
+X	(*(volatile U32 *)(0xFFFFF834))	= 0x8000000;
+N	rPIOD_IER	= 0x0; 			// 0x100EEC12;
+X	(*(volatile U32 *)(0xFFFFF840))	= 0x0; 			
+N	rPIOD_IDR	= 0xFFFFFFFF;	// 0xEFF113ED;
+X	(*(volatile U32 *)(0xFFFFF844))	= 0xFFFFFFFF;	
+N	rPIOD_IMR	= 0x0;
+X	(*(volatile U32 *)(0xFFFFF848))	= 0x0;
+N	rPIOD_MDER	= 0x0;
+X	(*(volatile U32 *)(0xFFFFF850))	= 0x0;
+N	rPIOD_MDDR	= 0xFFFFFFFF;
+X	(*(volatile U32 *)(0xFFFFF854))	= 0xFFFFFFFF;
+N	rPIOD_PUDR	= 0xFFFFFFFF;
+X	(*(volatile U32 *)(0xFFFFF860))	= 0xFFFFFFFF;
+N	rPIOD_PUER	= 0xF0F3026A;
+X	(*(volatile U32 *)(0xFFFFF864))	= 0xF0F3026A;
+N	rPIOD_ASR	= 0xE0F003C0;
+X	(*(volatile U32 *)(0xFFFFF870))	= 0xE0F003C0;
+N	rPIOD_BSR	= 0x7001001;
+X	(*(volatile U32 *)(0xFFFFF874))	= 0x7001001;
+N	rPIOE_PER	= 0x6;
+X	(*(volatile U32 *)(0xFFFFFA00))	= 0x6;
+N	rPIOE_PDR	= 0xFFFFFFF9;
+X	(*(volatile U32 *)(0xFFFFFA04))	= 0xFFFFFFF9;
+N	rPIOE_OER	= 0x0;
+X	(*(volatile U32 *)(0xFFFFFA10))	= 0x0;
+N	rPIOE_ODR	= 0x6;
+X	(*(volatile U32 *)(0xFFFFFA14))	= 0x6;
+N	rPIOE_IFER	= 0x0;
+X	(*(volatile U32 *)(0xFFFFFA20))	= 0x0;
+N	rPIOE_IFDR	= 0x6;
+X	(*(volatile U32 *)(0xFFFFFA24))	= 0x6;
+N	rPIOE_SODR	= 0x0;
+X	(*(volatile U32 *)(0xFFFFFA30))	= 0x0;
+N	rPIOE_CODR	= 0x0;
+X	(*(volatile U32 *)(0xFFFFFA34))	= 0x0;
+N	rPIOE_IER	= 0x0; 			// 0x6;
+X	(*(volatile U32 *)(0xFFFFFA40))	= 0x0; 			
+N	rPIOE_IDR	= 0xFFFFFFFF;	// 0xFFFFFFF9;
+X	(*(volatile U32 *)(0xFFFFFA44))	= 0xFFFFFFFF;	
+N	rPIOE_IMR	= 0x0;
+X	(*(volatile U32 *)(0xFFFFFA48))	= 0x0;
+N	rPIOE_MDER	= 0x0;
+X	(*(volatile U32 *)(0xFFFFFA50))	= 0x0;
+N	rPIOE_MDDR	= 0xFFFFFFFF;
+X	(*(volatile U32 *)(0xFFFFFA54))	= 0xFFFFFFFF;
+N	rPIOE_PUDR	= 0xFFFFFFFF;
+X	(*(volatile U32 *)(0xFFFFFA60))	= 0xFFFFFFFF;
+N	rPIOE_PUER	= 0x0;
+X	(*(volatile U32 *)(0xFFFFFA64))	= 0x0;
+N	rPIOE_ASR	= 0x7FFFFFF8;
+X	(*(volatile U32 *)(0xFFFFFA70))	= 0x7FFFFFF8;
+N	rPIOE_BSR	= 0x80000001;
+X	(*(volatile U32 *)(0xFFFFFA74))	= 0x80000001;
+N}
+N
+Nstatic void InitHW_DDRAM(void)
+N{
+N	U32 i = 0;
+N	
+N	rDDRSDRC_MD 	= 0x16;
+X	(*(volatile U32 *)(0xFFFFE620)) 	= 0x16;
+N	rDDRSDRC_CR 	= 0x3D;
+X	(*(volatile U32 *)(0xFFFFE608)) 	= 0x3D;
+N	rDDRSDRC_TPR0 	= 0x21128226;
+X	(*(volatile U32 *)(0xFFFFE60C)) 	= 0x21128226;
+N	rDDRSDRC_TPR1 	= 0x02C8100E;
+X	(*(volatile U32 *)(0xFFFFE610)) 	= 0x02C8100E;
+N	rDDRSDRC_TPR2 	= 0x2072;
+X	(*(volatile U32 *)(0xFFFFE614)) 	= 0x2072;
+N	rDDRSDRC_MR 	= 0x1;
+X	(*(volatile U32 *)(0xFFFFE600)) 	= 0x1;
+N	rDDRSD_BASE0 	= 0x0;
+X	(*(volatile U32 *)(0x70000000)) 	= 0x0;
+N
+N	SFR_DELAY(2);
+N	rDDRSDRC_MR 	= 0x1;
+X	(*(volatile U32 *)(0xFFFFE600)) 	= 0x1;
+N	rDDRSD_BASE0 	= 0x0;
+X	(*(volatile U32 *)(0x70000000)) 	= 0x0;
+N	SFR_DELAY(1);
+N	rDDRSDRC_MR 	= 0x2;
+X	(*(volatile U32 *)(0xFFFFE600)) 	= 0x2;
+N	rDDRSD_BASE0 	= 0x0;
+X	(*(volatile U32 *)(0x70000000)) 	= 0x0;
+N	SFR_DELAY(1);
+N	rDDRSDRC_MR 	= 0x5;
+X	(*(volatile U32 *)(0xFFFFE600)) 	= 0x5;
+N	rDDRSD_BASE2	= 0x0;
+X	(*(volatile U32 *)(0x74000000))	= 0x0;
+N	SFR_DELAY(1);
+N	rDDRSDRC_MR 	= 0x5;
+X	(*(volatile U32 *)(0xFFFFE600)) 	= 0x5;
+N	rDDRSD_BASE3 	= 0x0;
+X	(*(volatile U32 *)(0x76000000)) 	= 0x0;
+N	SFR_DELAY(1);
+N	rDDRSDRC_MR 	= 0x5;
+X	(*(volatile U32 *)(0xFFFFE600)) 	= 0x5;
+N	rDDRSD_BASE1 	= 0x0;
+X	(*(volatile U32 *)(0x72000000)) 	= 0x0;
+N	SFR_DELAY(2);
+N	i = rDDRSDRC_CR; 
+X	i = (*(volatile U32 *)(0xFFFFE608)); 
+N	i |= 0xBD;
+N	rDDRSDRC_CR 	= i;
+X	(*(volatile U32 *)(0xFFFFE608)) 	= i;
+N	rDDRSDRC_MR 	= 0x3;
+X	(*(volatile U32 *)(0xFFFFE600)) 	= 0x3;
+N	rDDRSD_BASE0 	= 0x0;
+X	(*(volatile U32 *)(0x70000000)) 	= 0x0;
+N	SFR_DELAY(1);
+N	rDDRSDRC_MR 	= 0x2;
+X	(*(volatile U32 *)(0xFFFFE600)) 	= 0x2;
+N	rDDRSD_BASE0 	= 0x0;
+X	(*(volatile U32 *)(0x70000000)) 	= 0x0;
+N	SFR_DELAY(1);
+N	rDDRSDRC_MR 	= 0x4;
+X	(*(volatile U32 *)(0xFFFFE600)) 	= 0x4;
+N	rDDRSD_BASE0 	= 0x0;
+X	(*(volatile U32 *)(0x70000000)) 	= 0x0;
+N	SFR_DELAY(1);
+N	rDDRSDRC_MR 	= 0x4;
+X	(*(volatile U32 *)(0xFFFFE600)) 	= 0x4;
+N	rDDRSD_BASE0 	= 0x0;
+X	(*(volatile U32 *)(0x70000000)) 	= 0x0;
+N	SFR_DELAY(1);
+N	i = rDDRSDRC_CR; 
+X	i = (*(volatile U32 *)(0xFFFFE608)); 
+N	i &= 0xFFFFFF7F;
+N	rDDRSDRC_CR 	= i;
+X	(*(volatile U32 *)(0xFFFFE608)) 	= i;
+N	rDDRSDRC_MR 	= 0x3;
+X	(*(volatile U32 *)(0xFFFFE600)) 	= 0x3;
+N	rDDRSD_BASE0 	= 0x0;
+X	(*(volatile U32 *)(0x70000000)) 	= 0x0;
+N	SFR_DELAY(1);
+N	i = rDDRSDRC_CR; 
+X	i = (*(volatile U32 *)(0xFFFFE608)); 
+N	i |= (0x07 << 12);
+N	rDDRSDRC_CR 	= i;
+X	(*(volatile U32 *)(0xFFFFE608)) 	= i;
+N	rDDRSDRC_MR		= 0x5;
+X	(*(volatile U32 *)(0xFFFFE600))		= 0x5;
+N	rDDRSD_BASE1 	= 0x0;
+X	(*(volatile U32 *)(0x72000000)) 	= 0x0;
+N	SFR_DELAY(1);
+N	i = rDDRSDRC_CR; 
+X	i = (*(volatile U32 *)(0xFFFFE608)); 
+N	i &= 0xFFFF8FFF;
+N	rDDRSDRC_CR 	= i;
+X	(*(volatile U32 *)(0xFFFFE608)) 	= i;
+N	rDDRSDRC_MR 	= 0x5;
+X	(*(volatile U32 *)(0xFFFFE600)) 	= 0x5;
+N	rDDRSD_BASE3 	= 0x0;
+X	(*(volatile U32 *)(0x76000000)) 	= 0x0;
+N	SFR_DELAY(1);
+N	rDDRSDRC_MR 	= 0x0;
+X	(*(volatile U32 *)(0xFFFFE600)) 	= 0x0;
+N	rDDRSD_BASE0 	= 0x0;
+X	(*(volatile U32 *)(0x70000000)) 	= 0x0;
+N	SFR_DELAY(1);
+N	
+N	rDDRSDRC_RTR 	= 0x00000411;
+X	(*(volatile U32 *)(0xFFFFE604)) 	= 0x00000411;
+N	rDDRSDRC_HS 	= 0x04;
+X	(*(volatile U32 *)(0xFFFFE62C)) 	= 0x04;
+N	
+N	SFR_DELAY(1);
+N}
+N
+Nstatic void SFR_DELAY(U32 time)	// "time" is counted in "ms"
+N{
+N	U32 i;
+N
+N	if(time != 0) 
+N	{
+N		for(; time > 0; time--)
+N		{
+N			for(i = 0; i < 7300; i++)
+N			{
+N				__asm
+N				{
+N				    NOP
+N  				}
+N			}
+N		}
+N	}
+N}
+N
+N//------------------------------------------------------------------------------
+N/// Default spurious interrupt handler. Infinite loop.
+N//------------------------------------------------------------------------------
+Nvoid defaultSpuriousHandler(void)
+N{
+N   // while (1);
+N}
+N
+N//------------------------------------------------------------------------------
+N/// Default handler for fast interrupt requests. Infinite loop.
+N//------------------------------------------------------------------------------
+Nvoid defaultFiqHandler(void)
+N{
+N    while (1);
+N}
+N
+N//------------------------------------------------------------------------------
+N/// Default handler for standard interrupt requests. Infinite loop.
+N//------------------------------------------------------------------------------
+Nvoid defaultIrqHandler(void)
+N{
+N    while (1);
+N}

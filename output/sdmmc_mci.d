@@ -1,0 +1,11 @@
+.\output\sdmmc_mci.o: atmel\sdmmc_mci.c
+.\output\sdmmc_mci.o: atmel\sdmmc_mci.h
+.\output\sdmmc_mci.o: .\atmel\board.h
+.\output\sdmmc_mci.o: .\atmel\chip.h
+.\output\sdmmc_mci.o: .\atmel\AT91SAM9M10.h
+.\output\sdmmc_mci.o: .\atmel\mci_hs.h
+.\output\sdmmc_mci.o: .\trace.h
+.\output\sdmmc_mci.o: .\shell.h
+.\output\sdmmc_mci.o: .\def.h
+.\output\sdmmc_mci.o: .\dbgu.h
+.\output\sdmmc_mci.o: C:\Keil\ARM\RV31\INC\string.h
