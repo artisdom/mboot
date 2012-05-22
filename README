@@ -1,0 +1,1 @@
+This is the bootloader for Lophilo: It boots Linux and FPGA at the power-on of a Lophilo board.
